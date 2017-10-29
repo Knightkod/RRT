@@ -7,18 +7,26 @@
 (* ::Input:: *)
 (*lambda=100;*)
 (*mu=100;*)
-(*ro=0.6;*)
+(*ro=lambda/mu;*)
 (*nmax=10000;*)
 
 
 (* ::Subchapter:: *)
-(*Apartado 2*)
+(*Apartado 2: Distribucion uniforme*)
 
 
 (* ::Input:: *)
 (**)
-(*histuniform= Table[RandomData[],nmax];*)
+(*histuniform= Table[RandomData[],{i,nmax}];*)
 (*Histogram[histuniform]*)
+
+
+(* ::Subchapter:: *)
+(*Apartado 3: Numeros aleatorios con randomExp*)
+
+
+(* ::Text:: *)
+(*El array InterArr es un array que almacena el espacio de tiempo que hay entre las llegadas de los paquetes. Esto se puede simular con una distrbuci\[OAcute]n exponencial con tasa de llegada lambda.*)
 
 
 (* ::Input:: *)
@@ -26,20 +34,8 @@
 (*Histogram[InterArr]*)
 
 
-(* ::Subchapter:: *)
-(*Apartado 3*)
-
-
 (* ::Input:: *)
 (*Histogram[InterArr, 50,"CDF"]*)
-
-
-(* ::Title:: *)
-(*PARTE 2 *)
-
-
-(* ::Subchapter:: *)
-(*Apartado 4*)
 
 
 (* ::Text:: *)
@@ -52,6 +48,10 @@
 
 (* ::Input:: *)
 (*ServiceTime=Table[RandomExp[mu],nmax];*)
+
+
+(* ::Text:: *)
+(*La siguiente funcion lo que hace es recibir los tiempos de llegada y de servicio de la cola.  Se analiza paquete a paquete para conseguir los tiempos en los que se estan sirviendo los paquetes.*)
 
 
 (* ::Input:: *)
@@ -85,7 +85,7 @@
 
 
 (* ::Text:: *)
-(*Otra opcion (usando funcion del Mathematica)*)
+(*Otra opcion (usando funcion del Mathematica) podr\[IAcute]a ser la siguiente funci\[OAcute]n. Esto es solo un ejemplo, pero podr\[IAcute]a sustituirse por las funciones ListLinePlot y PointStair de arriba.*)
 
 
 (* ::Input:: *)
@@ -94,6 +94,14 @@
 
 (* ::Input:: *)
 (**)
+
+
+(* ::Title:: *)
+(*PARTE 2 *)
+
+
+(* ::Subchapter:: *)
+(*Apartado 4*)
 
 
 (* ::Text:: *)
@@ -138,45 +146,6 @@
 (*{width,10,100,1}]*)
 
 
-(* ::Subchapter:: *)
-(*Apartado 5*)
-
-
-(* ::Text:: *)
-(*DetparureTime - ArrivalsTime acumulado y dividido entre el nudm e arrivals y todo eso en funcion de ro (divicios entre landa y mu)*)
-
-
-(* ::Input:: *)
-(*GetMeanTime[ArrivalTimes_,DepartureTimes_]:=Module[{acum,i},For[i=0,i<Length[ArrivalTimes],i++;*)
-(*	acum+=DepartureTimes[[i]]-ArrivalTimes[[i]];];Return[acum/Length[ArrivalTimes]]]*)
-
-
-(* ::Input:: *)
-(*MeanTimeOfRo[lambda_,mu_,n_]:=Module[{ro=lambda/mu,i,acum},Table[i,{i,0,n,1}];*)
-(*For[i=1,i<n,InterArrTime=Table[RandomExp[lambda],n];*)
-(*Arriv=Accumulate[InterArrTime];*)
-(*ServiceTime=Table[RandomExp[mu],n];*)
-(*DeparturesTime=FifoSchedulling[Arriv,ServiceTime];*)
-(*acum[[i]]=GetMeanTime[Arriv,DeparturesTime];]Return[acum]];*)
-(**)
-
-
-(* ::Input:: *)
-(**)
-
-
-(* ::Input:: *)
-(**)
-
-
-(* ::Input:: *)
-(*teoric=Plot[1/(1-ro),{ro,0,1},AxesOrigin->{0,0},MeanTimeOfRo[lambda,mu,ro]];*)
-
-
-(* ::Subchapter:: *)
-(*Apartado 6*)
-
-
 (* ::Input:: *)
 (*GetStat[lst_,stat_]:=Module[{time=0,lastTime=0},Map[(If[#[[2]]==stat,time+=#[[1]]-lastTime];*)
 (*lastTime=#[[1]])&,lst];time]*)
@@ -209,3 +178,39 @@
 (* ::Text:: *)
 (**)
 (*ObtainMaxUserConnected[listStat];*)
+
+
+(* ::Subchapter:: *)
+(*Apartado 5*)
+
+
+(* ::Text:: *)
+(*Primeramente calculamos el tiempo medio de espera estimado para unos valores de mu y lambda concreto. He definido una funci\[OAcute]n que calcula la media de tiempo, y luego esa la utilizo dentro de la funci\[OAcute]n que utiliza los parametros mu, lambda y ro para poder calcular la media de tiempo para esos valores concretos.*)
+
+
+(* ::Input:: *)
+(*GetMeanTime[ArrivalTimes_,DepartureTimes_]:=Module[{acum,i},For[i=0,i<Length[ArrivalTimes],i++;*)
+(*	acum+=DepartureTimes[[i]]-ArrivalTimes[[i]];];Return[acum/Length[ArrivalTimes]]]*)
+
+
+(* ::Input:: *)
+(*MeanTimeOfRo[lambda_,mu_,n_]:=Module[{ro=lambda/mu,i,acum},Table[i,{i,0,n,1}];*)
+(*For[i=1,i<=n,n++,*)
+(*InterArrTime=Table[RandomExp[lambda],n];*)
+(*Arriv=Accumulate[InterArrTime];*)
+(*ServiceTime=Table[RandomExp[mu],n];*)
+(*DeparturesTime=FifoSchedulling[Arriv,ServiceTime];*)
+(*acum[[i]]=GetMeanTime[Arriv,DeparturesTime];]Return[acum]];*)
+(**)
+
+
+(* ::Text:: *)
+(*Se compara con la media te\[OAcute]rica*)
+
+
+(* ::Input:: *)
+(*teoric=Plot[1/(1-ro),{ro,0,1},AxesOrigin->{0,0},MeanTimeOfRo[lambda,mu,ro]];*)
+
+
+(* ::Subchapter:: *)
+(*Apartado 6*)
